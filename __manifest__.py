@@ -10,8 +10,8 @@ Face Recognition Attendance System
 Use facial recognition to clock employees in and out.
 This module extends the HR Attendance module to add face recognition capabilities.
     """,
-    'author': 'Your Company',
-    'website': 'https://www.yourcompany.com',
+    'author': 'ARMKU',
+    'website': 'https://www.armku.us',
     'depends': ['hr', 'hr_attendance', 'base_setup'],
     'data': [
         'security/ir.model.access.csv',
