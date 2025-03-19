@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Face Recognition Fields to Employee Form -->
+    <record id="hr_employee_view_form_face_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.face.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="Face Recognition" name="face_recognition_settings">
+                    <field name="face_recognition_active"/>
+                    <field name="face_template_count"/>
+                    <button 
+                        name="action_register_face" 
+                        string="Register Face" 
+                        type="object" 
+                        class="btn-primary" 
+                        attrs="{'invisible': [('id', '=', False)]}"
+                    />
+                    <button 
+                        name="action_clear_face_data" 
+                        string="Clear Face Data" 
+                        type="object" 
+                        class="btn-secondary" 
+                        attrs="{'invisible': ['|', ('id', '=', False), ('face_template_count', '=', 0)]}"
+                        confirm="Are you sure you want to clear this employee's facial recognition data? This cannot be undone."
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Face Registration Wizard Form -->
+    <record id="view_employee_face_wizard_form" model="ir.ui.view">
+        <field name="name">hr.employee.face.wizard.form</field>
+        <field name="model">hr.employee.face.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Register Employee Face">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <p>Please position your face in good lighting and ensure your face is clearly visible.</p>
+                        <p>Multiple face templates may be captured to improve recognition accuracy.</p>
+                    </div>
+                    <group>
+                        <field name="employee_id" readonly="1"/>
+                        <field name="current_templates" readonly="1"/>
+                    </group>
+                    <div class="o_face_capture_container">
+                        <div class="o_face_video_wrapper">
+                            <video id="face_registration_video" autoplay="true" muted="true" playsinline="true"></video>
+                            <div class="o_face_video_overlay">
+                                <div class="o_face_guide_box"></div>
+                            </div>
+                        </div>
+                        <div class="o_face_status" invisible="1"></div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary o_capture_face">Capture Face</button>
+                            <button type="button" class="btn btn-secondary o_retry_capture" invisible="1">Retry</button>
+                        </div>
+                        <field name="face_data" invisible="1"/>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Save" class="btn-primary" type="object" name="action_save" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
