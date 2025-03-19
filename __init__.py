@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-from . import models
-from . import controllers
-from . import utils
-from .hooks import _ensure_face_models_directory
-
 # Set up dedicated logging for the face recognition module
 import logging
 
@@ -18,3 +13,9 @@ face_logger.addHandler(handler)
 
 # Set default level to INFO, can be overridden in config
 face_logger.setLevel(logging.INFO)
+
+# Now import the other modules
+from . import models
+from . import controllers
+from . import utils
+from .hooks import _ensure_face_models_directory
