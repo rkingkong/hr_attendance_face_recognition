@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from . import models
 from . import controllers
+from . import utils
+from .hooks import _ensure_face_models_directory
 
 # Set up dedicated logging for the face recognition module
 import logging
