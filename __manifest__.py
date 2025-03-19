@@ -18,6 +18,8 @@ This module extends the HR Attendance module to add face recognition capabilitie
         'views/hr_employee_views.xml',
         'views/hr_attendance_views.xml',
         'views/kiosk_face_view.xml',
+        'views/face_health_dashboard.xml',
+        'views/face_health_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -25,9 +27,15 @@ This module extends the HR Attendance module to add face recognition capabilitie
             'hr_attendance_face_recognition/static/src/css/kiosk_face_mode.css',
             'hr_attendance_face_recognition/static/src/js/face_registration.js',
             'hr_attendance_face_recognition/static/src/css/face_registration.css',
+            'hr_attendance_face_recognition/static/src/js/health_dashboard.js',
+            'hr_attendance_face_recognition/static/src/css/health_dashboard.css',
         ],
+    },
+    'external_dependencies': {
+        'python': ['numpy', 'psutil'],
     },
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    'post_init_hook': '_ensure_face_models_directory',
 }
