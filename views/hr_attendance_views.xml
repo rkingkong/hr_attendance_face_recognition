@@ -25,7 +25,7 @@
     <record id="hr_attendance_view_tree_face_inherit" model="ir.ui.view">
         <field name="name">hr.attendance.view.tree.face.inherit</field>
         <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_tree"/>
+        <field name="inherit_id" ref="hr.attendance.tree"/>
         <field name="arch" type="xml">
             <field name="check_in" position="after">
                 <field name="check_in_method" optional="hide"/>
