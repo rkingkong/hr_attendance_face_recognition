@@ -4,7 +4,7 @@
     <record id="hr_attendance_view_form_face_inherit" model="ir.ui.view">
         <field name="name">hr.attendance.view.form.face.inherit</field>
         <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="inherit_id" ref="hr.attendance.form"/>
         <field name="arch" type="xml">
             <field name="check_in" position="after">
                 <field name="check_in_method" readonly="1"/>
