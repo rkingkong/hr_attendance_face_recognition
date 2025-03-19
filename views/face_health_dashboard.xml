@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="face_recognition_health_dashboard" name="Face Recognition Health Dashboard">
+        <t t-call="web.layout">
+            <t t-set="title">Face Recognition Health Dashboard</t>
+            <t t-set="head">
+                <meta charset="utf-8"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <link rel="stylesheet" href="/hr_attendance_face_recognition/static/src/css/health_dashboard.css"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+            </t>
+            <t t-set="body_classname" t-value="'o_face_health_dashboard'"/>
+            <body class="o_web_client o_face_health_dashboard">
+                <div class="o_face_health_container">
+                    <header>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h1 class="o_face_health_title mt-3">
+                                    Face Recognition Health Dashboard
+                                </h1>
+                                <h2 class="o_face_health_subtitle mt-2">
+                                    <t t-esc="company.name"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div class="o_face_health_body">
+                        <!-- System Status Card -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h3>System Status</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="o_face_status_indicator">
+                                            <div class="o_face_status_circle" id="status_indicator">
+                                                <i class="fa fa-spin fa-spinner"></i>
+                                            </div>
+                                            <div class="o_face_status_text" id="status_text">
+                                                Checking system status...
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="o_face_status_details" id="status_details">
+                                            <div class="text-center">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                <p>Loading system status...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h3>Employee Stats</h3>
+                                    </div>
+                                    <div class="card-body" id="employee_stats">
+                                        <div class="text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h3>Recognition Stats</h3>
+                                    </div>
+                                    <div class="card-body" id="recognition_stats">
+                                        <div class="text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h3>System Resources</h3>
+                                    </div>
+                                    <div class="card-body" id="resource_stats">
+                                        <div class="text-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions Row -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>Management Actions</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button id="run_diagnostics" class="btn btn-primary btn-lg">
+                                                    <i class="fa fa-stethoscope mr-2"></i>Run Diagnostics
+                                                </button>
+                                            </div>
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button id="refresh_cache" class="btn btn-warning btn-lg">
+                                                    <i class="fa fa-refresh mr-2"></i>Refresh Face Cache
+                                                </button>
+                                            </div>
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button id="test_kiosk" class="btn btn-info btn-lg">
+                                                    <i class="fa fa-desktop mr-2"></i>Test Kiosk Mode
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Diagnostics Results -->
+                        <div class="card mb-4" id="diagnostics_card" style="display: none;">
+                            <div class="card-header">
+                                <h3>Diagnostics Results</h3>
+                            </div>
+                            <div class="card-body" id="diagnostics_results">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <footer>
+                        <div class="row">
+                            <div class="col-12 text-center mt-3 mb-3">
+                                <small class="o_face_health_footer">
+                                    Last updated: <span id="last_updated">Now</span>
+                                </small>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </body>
+        </t>
+    </template>
+</odoo>
