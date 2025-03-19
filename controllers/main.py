@@ -3,6 +3,8 @@ import json
 import logging
 import base64
 import numpy as np
+import time
+import traceback
 from datetime import datetime
 from odoo import http, fields, _
 from odoo.http import request, Response
@@ -11,6 +13,39 @@ from odoo.addons.web.controllers.main import ensure_db
 _logger = logging.getLogger(__name__)
 
 class FaceRecognitionController(http.Controller):
+    # Class variables for caching
+    _face_encodings_cache = {}
+    _cache_timestamp = None
+    _cache_validity = 600  # 10 minutes in seconds
+    
+    def _get_all_face_encodings(self):
+        """Cache all employee face encodings for faster recognition"""
+        current_time = time.time()
+        
+        # Return cached data if valid
+        if self._cache_timestamp and (current_time - self._cache_timestamp < self._cache_validity):
+            return self._face_encodings_cache
+            
+        # Rebuild cache
+        self._face_encodings_cache = {}
+        employees = request.env['hr.employee'].search([
+            ('face_encoding', '!=', False),
+            ('face_recognition_active', '=', True)
+        ])
+        
+        for employee in employees:
+            try:
+                templates = json.loads(base64.b64decode(employee.face_encoding).decode('utf-8'))
+                self._face_encodings_cache[employee.id] = {
+                    'employee': employee,
+                    'templates': templates
+                }
+            except Exception as e:
+                _logger.error("Error loading face template for employee %s: %s", employee.name, e)
+        
+        self._cache_timestamp = current_time
+        _logger.info("Face encoding cache rebuilt with %s employees", len(self._face_encodings_cache))
+        return self._face_encodings_cache
     
     @http.route('/face_recognition/kiosk', type='http', auth='user', website=True)
     def face_kiosk_mode(self, **kw):
@@ -44,6 +79,9 @@ class FaceRecognitionController(http.Controller):
             employee.write({
                 'face_encoding': encoded_data
             })
+            
+            # Invalidate the cache since we've updated an employee's face data
+            self.__class__._cache_timestamp = None
             
             return {
                 'success': True, 
@@ -83,23 +121,21 @@ class FaceRecognitionController(http.Controller):
             best_match = None
             highest_confidence = 0
             
-            employees = request.env['hr.employee'].search([
-                ('face_encoding', '!=', False),
-                ('face_recognition_active', '=', True)
-            ])
+            # Get all employee face encodings from cache
+            employee_encodings = self._get_all_face_encodings()
             
-            for employee in employees:
-                # Get the employee's face templates
-                templates = json.loads(base64.b64decode(employee.face_encoding).decode('utf-8'))
+            # Convert input face encoding
+            input_encoding = json.loads(base64.b64decode(face_encoding).decode('utf-8'))
+            
+            # Compare against all employees in the cache
+            for employee_id, data in employee_encodings.items():
+                employee = data['employee']
+                templates = data['templates']
                 
                 # Compare against all templates for this employee
                 for template in templates:
-                    # This is a simplified comparison - in a real system,
-                    # you would use a proper facial recognition algorithm
-                    confidence = calculate_face_similarity(
-                        json.loads(base64.b64decode(face_encoding).decode('utf-8')),
-                        template
-                    )
+                    # Calculate similarity between face templates
+                    confidence = calculate_face_similarity(input_encoding, template)
                     
                     if confidence > highest_confidence:
                         highest_confidence = confidence
@@ -158,11 +194,48 @@ class FaceRecognitionController(http.Controller):
                 }
                 
         except Exception as e:
-            _logger.error("Face verification error: %s", e)
+            _logger.error("Face verification error: %s\nTraceback: %s", str(e), traceback.format_exc())
             return {
                 'success': False,
                 'message': _("Face verification failed: %s") % str(e)
             }
+
+    @http.route('/face_recognition/cache/status', type='json', auth='user')
+    def cache_status(self):
+        """Return status of the face encoding cache"""
+        if not request.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+            return {'success': False, 'message': _("Insufficient permissions")}
+            
+        current_time = time.time()
+        cache_age = current_time - (self._cache_timestamp or 0)
+        is_valid = self._cache_timestamp and (cache_age < self._cache_validity)
+        
+        return {
+            'success': True,
+            'cache_exists': self._cache_timestamp is not None,
+            'cache_valid': is_valid,
+            'cache_age_seconds': cache_age if self._cache_timestamp else 0,
+            'cache_size': len(self._face_encodings_cache),
+            'validity_period': self._cache_validity
+        }
+        
+    @http.route('/face_recognition/cache/refresh', type='json', auth='user')
+    def refresh_cache(self):
+        """Force refresh the face encoding cache"""
+        if not request.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+            return {'success': False, 'message': _("Insufficient permissions")}
+            
+        # Reset cache timestamp to force rebuild
+        self.__class__._cache_timestamp = None
+        
+        # Rebuild cache
+        employee_encodings = self._get_all_face_encodings()
+        
+        return {
+            'success': True,
+            'message': _("Face encoding cache refreshed successfully"),
+            'cache_size': len(employee_encodings)
+        }
 
 
 def calculate_face_similarity(encoding1, encoding2):
