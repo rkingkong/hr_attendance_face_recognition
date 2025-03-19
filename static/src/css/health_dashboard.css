@@ -1,0 +1,201 @@
+.o_face_health_dashboard {
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.o_face_health_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.o_face_health_title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #875A7B;
+}
+
+.o_face_health_subtitle {
+    font-size: 20px;
+    color: #495057;
+}
+
+/* Status indicator */
+.o_face_status_indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.o_face_status_circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    color: white;
+    font-size: 32px;
+}
+
+.o_face_status_circle i {
+    line-height: 1;
+}
+
+.o_face_status_text {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Status details */
+.o_face_check_item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.o_face_check_item:last-child {
+    border-bottom: none;
+}
+
+.o_face_check_icon {
+    flex: 0 0 24px;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.o_face_check_name {
+    flex: 0 0 150px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.o_face_check_message {
+    flex: 1;
+}
+
+/* Stats display */
+.o_face_stat_item {
+    margin-bottom: 15px;
+}
+
+.o_face_stat_label {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.o_face_stat_value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #212529;
+}
+
+/* Confidence chart */
+.o_face_confidence_chart {
+    margin-top: 15px;
+}
+
+.o_face_confidence_bar_container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.o_face_confidence_label {
+    flex: 0 0 80px;
+    font-size: 12px;
+}
+
+.o_face_confidence_bar_wrapper {
+    flex: 1;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+}
+
+.o_face_confidence_bar {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.o_face_confidence_value {
+    flex: 0 0 100px;
+    font-size: 12px;
+    text-align: right;
+}
+
+/* Resource stats */
+.o_face_resource {
+    margin-bottom: 15px;
+}
+
+.o_face_resource h5 {
+    margin-bottom: 5px;
+}
+
+.o_face_resource_detail {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.o_face_system_info {
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+}
+
+.o_face_system_detail {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+/* Diagnostics results */
+.o_face_diagnostics_timestamp {
+    font-style: italic;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.o_face_issue_item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.o_face_issue_severity {
+    margin-right: 10px;
+}
+
+.o_face_issue_type {
+    margin-right: 10px;
+}
+
+.o_face_issue_message {
+    flex: 1;
+}
+
+.o_face_recommendations_list {
+    padding-left: 20px;
+}
+
+.o_face_recommendations_list li {
+    margin-bottom: 8px;
+}
+
+/* Footer */
+.o_face_health_footer {
+    color: #6c757d;
+}
