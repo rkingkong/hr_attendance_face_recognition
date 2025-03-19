@@ -1,0 +1,133 @@
+.o_face_kiosk_mode {
+    background-color: #f0f0f0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.o_face_kiosk_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100vh;
+    padding: 20px;
+}
+
+.o_face_kiosk_title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #875A7B;
+    margin-bottom: 8px;
+}
+
+.o_face_kiosk_clock_status {
+    font-size: 24px;
+    color: #343a40;
+    margin-bottom: 8px;
+}
+
+.o_face_kiosk_employee_name {
+    font-size: 28px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.o_face_kiosk_body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.o_face_kiosk_video_container {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#face_kiosk_video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #000;
+}
+
+.o_face_kiosk_message_container {
+    width: 100%;
+    max-width: 640px;
+    min-height: 60px;
+}
+
+.o_face_kiosk_message {
+    padding: 12px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.o_face_processing_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 25px;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.o_face_kiosk_status_message {
+    font-size: 16px;
+    color: #495057;
+}
+
+.o_face_kiosk_button_container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.o_face_kiosk_button_container .btn {
+    margin: 0 10px;
+    min-width: 140px;
+}
+
+.o_face_kiosk_footer {
+    color: #6c757d;
+}
+
+/* Canvas overlay styling */
+canvas {
+    z-index: 10;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .o_face_kiosk_title {
+        font-size: 24px;
+    }
+    
+    .o_face_kiosk_clock_status {
+        font-size: 20px;
+    }
+    
+    .o_face_kiosk_employee_name {
+        font-size: 22px;
+    }
+    
+    .o_face_kiosk_button_container {
+        flex-direction: column;
+    }
+    
+    .o_face_kiosk_button_container .btn {
+        margin: 10px 0;
+    }
+}
