@@ -29,6 +29,9 @@ var FaceKioskMode = AbstractAction.extend({
         this.showVideo = true;
         this.stream = null;
         this.employee = null;
+        this.retryAttempts = 0;
+        this.maxRetries = 3;
+        this.retryDelay = 1000; // 1 second between retries
     },
     
     willStart: function () {
@@ -82,7 +85,7 @@ var FaceKioskMode = AbstractAction.extend({
         try {
             this._showProcessingMessage(_t('Loading face detection models...'));
             
-            // Load models from CDN
+            // Load models from static directory
             await faceapi.nets.tinyFaceDetector.loadFromUri('/hr_attendance_face_recognition/static/models');
             await faceapi.nets.faceLandmark68Net.loadFromUri('/hr_attendance_face_recognition/static/models');
             await faceapi.nets.faceRecognitionNet.loadFromUri('/hr_attendance_face_recognition/static/models');
@@ -90,9 +93,17 @@ var FaceKioskMode = AbstractAction.extend({
             this.faceModelsLoaded = true;
             this._hideProcessingMessage();
             this._showSuccessMessage(_t('Face detection ready!'));
+            
+            // Log successful model loading
+            console.log('Face detection models loaded successfully');
         } catch (error) {
             console.error('Error loading face detection models', error);
-            this._showErrorMessage(_t('Failed to load face detection models'));
+            this._showErrorMessage(_t('Failed to load face detection models. Retrying...'));
+            
+            // Retry loading models after a delay
+            setTimeout(() => {
+                this._loadFaceDetectionModels();
+            }, 3000);
         }
     },
     
@@ -114,6 +125,16 @@ var FaceKioskMode = AbstractAction.extend({
         } catch (error) {
             console.error('Error accessing camera', error);
             this._showErrorMessage(_t("Could not access camera. Please ensure you've given permission."));
+            
+            // Show specific error message based on error type
+            if (error.name === 'NotAllowedError') {
+                this._showErrorMessage(_t("Camera access denied. Please grant permission in your browser settings."));
+            } else if (error.name === 'NotFoundError') {
+                this._showErrorMessage(_t("No camera found. Please connect a camera and try again."));
+            } else if (error.name === 'NotReadableError') {
+                this._showErrorMessage(_t("Camera is in use by another application. Please close other apps using the camera."));
+            }
+            
             return Promise.reject(error);
         }
     },
@@ -145,7 +166,14 @@ var FaceKioskMode = AbstractAction.extend({
         
         if (!this.video.srcObject && this.stream) {
             this.video.srcObject = this.stream;
-            await this.video.play();
+            try {
+                await this.video.play();
+            } catch (err) {
+                console.error('Error playing video:', err);
+                this._showErrorMessage(_t('Error accessing camera stream. Please reload the page.'));
+                this.detectRunning = false;
+                return;
+            }
         }
         
         // Wait a bit to make sure video is playing
@@ -158,6 +186,17 @@ var FaceKioskMode = AbstractAction.extend({
         }
         
         try {
+            // Check if video is ready
+            if (this.video.readyState !== 4) {
+                // Video not ready yet, wait a bit longer
+                setTimeout(() => this._detectFace(), 300);
+                return;
+            }
+            
+            // Clear previous drawings
+            const context = this.canvas.getContext('2d');
+            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            
             // Detect faces in video stream
             const detections = await faceapi.detectAllFaces(
                 this.video, 
@@ -168,8 +207,6 @@ var FaceKioskMode = AbstractAction.extend({
             const dims = faceapi.matchDimensions(this.canvas, this.video, true);
             const resizedDetections = faceapi.resizeResults(detections, dims);
             
-            const context = this.canvas.getContext('2d');
-            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             faceapi.draw.drawDetections(this.canvas, resizedDetections);
             faceapi.draw.drawFaceLandmarks(this.canvas, resizedDetections);
             
@@ -218,6 +255,7 @@ var FaceKioskMode = AbstractAction.extend({
     
     _verifyFace: function(descriptor, snapshot) {
         this._showProcessingMessage(_t('Verifying identity...'));
+        this.retryAttempts = 0;
         
         // Prepare data for API call
         const data = {
@@ -225,26 +263,54 @@ var FaceKioskMode = AbstractAction.extend({
             image: snapshot
         };
         
+        // Implement retry logic
+        this._attemptVerification(data);
+    },
+    
+    _attemptVerification: function(data) {
+        var self = this;
+        
         // Call server to verify face
         this._rpc({
             route: '/face_recognition/verify',
             params: {
                 face_data: data
             },
-        }).then(result => {
-            this.detectRunning = false;
+        }).then(function(result) {
+            self.detectRunning = false;
             
             if (result.success) {
+                // Reset retry counter on success
+                self.retryAttempts = 0;
+                
                 // Successfully recognized
-                this._showAttendanceSuccess(result);
+                self._showAttendanceSuccess(result);
             } else {
                 // No match found
-                this._showAttendanceError(result);
+                self._showAttendanceError(result);
             }
-        }).catch(error => {
+        }).catch(function(error) {
             console.error('Error verifying face:', error);
-            this._showErrorMessage(_t('Error connecting to server. Please try again.'));
-            this.detectRunning = false;
+            
+            // Increment retry counter
+            self.retryAttempts++;
+            
+            if (self.retryAttempts <= self.maxRetries) {
+                // Show retry message
+                self._showProcessingMessage(_t('Connection issue. Retrying... (') + self.retryAttempts + '/' + self.maxRetries + ')');
+                
+                // Implement exponential backoff
+                const delay = self.retryDelay * Math.pow(1.5, self.retryAttempts - 1);
+                
+                // Retry after delay
+                setTimeout(function() {
+                    self._attemptVerification(data);
+                }, delay);
+            } else {
+                // Max retries reached, show error
+                self._showErrorMessage(_t('Error connecting to server after several attempts. Please try again.'));
+                self.detectRunning = false;
+            }
         });
     },
     
@@ -270,18 +336,35 @@ var FaceKioskMode = AbstractAction.extend({
         this.$('.o_face_kiosk_employee_name').text(name);
         this.$('.o_face_kiosk_message').removeClass('alert-danger');
         this.$('.o_face_kiosk_message').addClass('alert-success');
-        this.$('.o_face_kiosk_message').text(
+        
+        // Add confidence score to the message
+        const confidenceText = result.confidence 
+            ? _t('Confidence: ') + result.confidence.toFixed(1) + '%' 
+            : '';
+            
+        // Add processing time if available
+        const processingText = result.processing_time 
+            ? _t(' (Processed in ') + (result.processing_time * 1000).toFixed(0) + 'ms)' 
+            : '';
+        
+        this.$('.o_face_kiosk_message').html(
             action === 'check_in' ? 
-            _t('You have been successfully checked in!') : 
-            _t('You have been successfully checked out!')
+            _t('You have been successfully checked in!') + '<br/>' + confidenceText + processingText : 
+            _t('You have been successfully checked out!') + '<br/>' + confidenceText + processingText
         );
         
-        // Show the success message for 2 seconds then reset
+        // Show the success message for 5 seconds then reset
         setTimeout(function() {
             self.$('.o_face_kiosk_clock_status').text(_t('Scan Your Face'));
             self.$('.o_face_kiosk_employee_name').text('');
             self.$('.o_face_kiosk_message').removeClass('alert-success alert-danger');
             self.$('.o_face_kiosk_message').text('');
+            
+            // Clear the canvas
+            if (self.canvas) {
+                const context = self.canvas.getContext('2d');
+                context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+            }
         }, 5000);
     },
     
@@ -309,13 +392,13 @@ var FaceKioskMode = AbstractAction.extend({
     },
     
     _showSuccessMessage: function(message) {
-        this.$('.o_face_kiosk_message').removeClass('alert-danger');
+        this.$('.o_face_kiosk_message').removeClass('alert-danger alert-warning');
         this.$('.o_face_kiosk_message').addClass('alert-success');
         this.$('.o_face_kiosk_message').text(message);
     },
     
     _showErrorMessage: function(message) {
-        this.$('.o_face_kiosk_message').removeClass('alert-success');
+        this.$('.o_face_kiosk_message').removeClass('alert-success alert-warning');
         this.$('.o_face_kiosk_message').addClass('alert-danger');
         this.$('.o_face_kiosk_message').text(message);
     },
