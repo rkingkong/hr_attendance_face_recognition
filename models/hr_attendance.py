@@ -5,14 +5,14 @@ class HrAttendanceFace(models.Model):
     _inherit = 'hr.attendance'
     
     check_in_method = fields.Selection(
-        ('manual, 'Manual'), 
+        ('manual', 'Manual'), 
         ('face', 'Face Recognition')],
         default='manual',
         string='Check In Method'
     )
     
     check_out_method = fields.Selection(
-        ('manual, 'Manual'), 
+        ('manual', 'Manual'), 
         ('face', 'Face Recognition')],
         default='manual',
         string='Check Out Method'
