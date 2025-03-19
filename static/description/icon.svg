@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8E2DE2" />
+      <stop offset="100%" stop-color="#4A00E0" />
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="10" fill="url(#gradient)" />
+  
+  <!-- Camera outline -->
+  <rect x="25" y="35" width="70" height="50" rx="5" fill="rgba(255, 255, 255, 0.2)" />
+  <circle cx="60" cy="60" r="20" fill="rgba(255, 255, 255, 0.2)" />
+  
+  <!-- Face outline -->
+  <circle cx="60" cy="60" r="15" stroke="white" stroke-width="2" fill="none" />
+  
+  <!-- Face features -->
+  <circle cx="53" cy="55" r="2" fill="white" /> <!-- Left eye -->
+  <circle cx="67" cy="55" r="2" fill="white" /> <!-- Right eye -->
+  <path d="M54 67 Q60 72 66 67" stroke="white" stroke-width="2" fill="none" /> <!-- Smile -->
+  
+  <!-- Facial recognition grid points -->
+  <circle cx="45" cy="50" r="1" fill="white" />
+  <circle cx="50" cy="45" r="1" fill="white" />
+  <circle cx="60" cy="43" r="1" fill="white" />
+  <circle cx="70" cy="45" r="1" fill="white" />
+  <circle cx="75" cy="50" r="1" fill="white" />
+  <circle cx="75" cy="60" r="1" fill="white" />
+  <circle cx="75" cy="70" r="1" fill="white" />
+  <circle cx="70" cy="75" r="1" fill="white" />
+  <circle cx="60" cy="77" r="1" fill="white" />
+  <circle cx="50" cy="75" r="1" fill="white" />
+  <circle cx="45" cy="70" r="1" fill="white" />
+  <circle cx="45" cy="60" r="1" fill="white" />
+  
+  <!-- Connect some points to show grid -->
+  <line x1="45" y1="50" x2="50" y2="45" stroke="white" stroke-width="0.5" />
+  <line x1="50" y1="45" x2="60" y2="43" stroke="white" stroke-width="0.5" />
+  <line x1="60" y1="43" x2="70" y2="45" stroke="white" stroke-width="0.5" />
+  <line x1="70" y1="45" x2="75" y2="50" stroke="white" stroke-width="0.5" />
+  
+  <!-- Module name -->
+  <text x="60" y="100" font-family="Arial" font-size="10" text-anchor="middle" fill="white">
+    Face Recognition
+  </text>
+</svg>
