@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="face_recognition_health_dashboard">
-        <div class="o_face_health_container">
-            <header>
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <h1 class="o_face_health_title mt-3">
-                            Face Recognition Health Dashboard
-                        </h1>
-                        <h2 class="o_face_health_subtitle mt-2">
-                            <t t-esc="widget.company_name"/>
-                        </h2>
+        <div class="o_face_health_dashboard">
+            <div class="o_face_health_container">
+                <header>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h1 class="o_face_health_title mt-3">
+                                Face Recognition Health Dashboard
+                            </h1>
+                            <h2 class="o_face_health_subtitle mt-2">
+                                <t t-esc="widget.company_name"/>
+                            </h2>
+                        </div>
                     </div>
-                </div>
-            </header>
+                </header>
             
             <div class="o_face_health_body">
                 <!-- System Status Card -->
