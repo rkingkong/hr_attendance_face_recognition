@@ -46,7 +46,7 @@
     <!-- Add Face Kiosk to Menu -->
     <menuitem id="menu_hr_attendance_face_kiosk" 
         name="Face Recognition Kiosk" 
-        parent="hr_attendance.menu_hr_attendance_kiosk_mode" 
+        parent="hr_attendance.menu_hr_attendance_root" 
         sequence="20" 
         action="hr_attendance_face_recognition_kiosk_action"
         groups="hr_attendance.group_hr_attendance_user"/>
