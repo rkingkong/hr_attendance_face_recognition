@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Face Recognition Fields to Attendance Form -->
+    <record id="hr_attendance_view_form_face_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.view.form.face.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <field name="check_in" position="after">
+                <field name="check_in_method" readonly="1"/>
+            </field>
+            <field name="check_out" position="after">
+                <field name="check_out_method" readonly="1"/>
+                <field name="confidence_score" widget="percentage" readonly="1" attrs="{'invisible': [('check_in_method', '!=', 'face'), ('check_out_method', '!=', 'face')]}"/>
+            </field>
+            <sheet position="inside">
+                <group string="Attendance Capture" attrs="{'invisible': [('face_image', '=', False)]}">
+                    <field name="face_image" widget="image" readonly="1" options="{'preview_image': 'face_image', 'size': [300, 300]}"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+    
+    <!-- Add Face Recognition Fields to Tree View -->
+    <record id="hr_attendance_view_tree_face_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.view.tree.face.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="check_in" position="after">
+                <field name="check_in_method" optional="hide"/>
+            </field>
+            <field name="check_out" position="after">
+                <field name="check_out_method" optional="hide"/>
+                <field name="confidence_score" widget="percentage" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    
+    <!-- Main Menu Action -->
+    <record id="hr_attendance_face_recognition_kiosk_action" model="ir.actions.client">
+        <field name="name">Face Recognition Kiosk</field>
+        <field name="tag">hr_attendance_face_kiosk_mode</field>
+    </record>
+    
+    <!-- Add Face Kiosk to Menu -->
+    <menuitem id="menu_hr_attendance_face_kiosk" 
+        name="Face Recognition Kiosk" 
+        parent="hr_attendance.menu_hr_attendance_kiosk_mode" 
+        sequence="20" 
+        action="hr_attendance_face_recognition_kiosk_action"
+        groups="hr_attendance.group_hr_attendance_user"/>
+    
+    <!-- Add Face Recognition settings to Attendance Configuration -->
+    <record id="res_config_settings_view_form_face_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.face.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr_attendance']" position="inside">
+                <h2>Face Recognition Settings</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="face_recognition_kiosk_mode"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="face_recognition_kiosk_mode"/>
+                            <div class="text-muted">
+                                Enable kiosk mode for face recognition interface
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="store_attendance_images"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="store_attendance_images"/>
+                            <div class="text-muted">
+                                Store images captured during attendance check-in/out
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="face_recognition_threshold"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                Minimum confidence level required for face recognition
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="face_recognition_threshold" class="o_light_label" widget="percentage"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
