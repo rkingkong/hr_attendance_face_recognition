@@ -1,13 +1,20 @@
 .o_face_health_dashboard {
     background-color: #f8f9fa;
-    height: 100%;
+    height: auto;
     overflow-y: auto;
+    min-height: 100%;
 }
 
 .o_face_health_container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    padding-bottom: 50px;
+} 
+
+.o_content {
+    overflow: auto !important; /* Force scrolling to be enabled */
+    height: auto !important;
 }
 
 .o_face_health_title {
