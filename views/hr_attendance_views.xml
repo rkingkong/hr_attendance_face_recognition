@@ -4,7 +4,7 @@
     <record id="hr_attendance_view_form_face_inherit" model="ir.ui.view">
         <field name="name">hr.attendance.view.form.face.inherit</field>
         <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr.attendance.form"/>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
             <field name="check_in" position="after">
                 <field name="check_in_method" readonly="1"/>
@@ -13,11 +13,11 @@
                 <field name="check_out_method" readonly="1"/>
                 <field name="confidence_score" widget="percentage" readonly="1" attrs="{'invisible': [('check_in_method', '!=', 'face'), ('check_out_method', '!=', 'face')]}"/>
             </field>
-            <sheet position="inside">
+            <group position="inside">
                 <group string="Attendance Capture" attrs="{'invisible': [('face_image', '=', False)]}">
                     <field name="face_image" widget="image" readonly="1" options="{'preview_image': 'face_image', 'size': [300, 300]}"/>
                 </group>
-            </sheet>
+            </group>
         </field>
     </record>
     
