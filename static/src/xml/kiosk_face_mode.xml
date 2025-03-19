@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="HrAttendanceFaceKiosk">
+        <div class="o_face_kiosk_container">
+            <header>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="o_face_kiosk_title mt-3">
+                            <t t-esc="widget.company_name"/>
+                        </h1>
+                        <h2 class="o_face_kiosk_clock_status mt-2">Scan Your Face</h2>
+                        <h3 class="o_face_kiosk_employee_name mt-1"></h3>
+                    </div>
+                </div>
+            </header>
+            <div class="o_face_kiosk_body">
+                <!-- Video Feed Container -->
+                <div class="o_face_kiosk_video_container">
+                    <video id="face_kiosk_video" autoplay="true" muted="true" playsinline="true"></video>
+                </div>
+                
+                <!-- Status Messages -->
+                <div class="o_face_kiosk_message_container mt-3">
+                    <div class="alert o_face_kiosk_message" role="alert"></div>
+                    <div class="o_face_processing_container d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Processing...</span>
+                        </div>
+                        <div class="o_face_kiosk_status_message ml-2">Processing...</div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="o_face_kiosk_button_container mt-4">
+                    <button class="btn btn-primary btn-lg o_face_detect_btn">
+                        <i class="fa fa-camera mr-1"/>Scan Face
+                    </button>
+                    <button class="btn btn-secondary btn-lg o_face_kiosk_toggle ml-2">
+                        <i class="fa fa-expand mr-1"/>Full Screen
+                    </button>
+                </div>
+            </div>
+            <footer>
+                <div class="row">
+                    <div class="col-12 text-center mt-3 mb-3">
+                        <small class="o_face_kiosk_footer">
+                            Powered by <a href="https://www.odoo.com" target="_blank">Odoo</a>
+                        </small>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates>
