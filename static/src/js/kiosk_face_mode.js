@@ -10,7 +10,8 @@ var _t = core._t;
 
 // Load face-api.js from CDN
 const script = document.createElement('script');
-script.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
+script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.2/dist/face-api.js';
+script.crossOrigin = 'anonymous';
 document.head.appendChild(script);
 
 var FaceKioskMode = AbstractAction.extend({
@@ -113,6 +114,12 @@ var FaceKioskMode = AbstractAction.extend({
         }
         
         try {
+        // Check if mediaDevices is supported
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            this._showErrorMessage(_t("Your browser doesn't support camera access. Please use Chrome, Firefox, or Edge."));
+            return Promise.reject(new Error("MediaDevices not supported"));
+            }
+            
             this.stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     width: { ideal: 1280 },
@@ -122,6 +129,8 @@ var FaceKioskMode = AbstractAction.extend({
             });
             
             return Promise.resolve();
+
+            
         } catch (error) {
             console.error('Error accessing camera', error);
             this._showErrorMessage(_t("Could not access camera. Please ensure you've given permission."));
@@ -134,7 +143,7 @@ var FaceKioskMode = AbstractAction.extend({
             } else if (error.name === 'NotReadableError') {
                 this._showErrorMessage(_t("Camera is in use by another application. Please close other apps using the camera."));
             }
-            
+            this._showErrorMessage(errorMessage);
             return Promise.reject(error);
         }
     },
