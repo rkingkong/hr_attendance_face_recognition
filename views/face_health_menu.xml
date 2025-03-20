@@ -15,16 +15,14 @@
               groups="hr_attendance.group_hr_attendance_manager"/>
 
     <!-- Fix: Use the Correct Parent Template -->
-    <template id="menu_face_recognition" inherit_id="web.menu_secondary" name="Custom Face Recognition Menu">
-        <xpath expr="//div[contains(@class,'o_menu_systray')]" position="inside">
-            <ul role="menu" class="o_menu_systray">
+        <template id="menu_face_recognition" inherit_id="web.webclient_bootstrap" name="Custom Face Recognition Menu">
+            <xpath expr="//div[hasclass('o_main_navbar')]//ul[hasclass('o_menu_systray')]" position="inside">
                 <li role="menuitem">
                     <a href="/web#menu_id=menu_hr_attendance_face_health" role="menuitem" tabindex="0">
                         Face Recognition Health
                     </a>
                 </li>
-            </ul>
-        </xpath>
-    </template>
+            </xpath>
+        </template>
 
 </odoo>
