@@ -54,7 +54,7 @@
                         </div>
                         <div class="o_face_status" invisible="1"></div>
                         <div class="text-center">
-                            <button name="action_capture_face" type="button" class="btn btn-primary o_capture_face">Capture Face</button>
+                            <button type="button" class="btn btn-primary o_capture_face">Capture Face</button>
                             <button name="action_retry_capture" type="button" class="btn btn-secondary o_retry_capture" invisible="1">Retry</button>
                         </div>
                         <field name="face_data" invisible="1"/>
