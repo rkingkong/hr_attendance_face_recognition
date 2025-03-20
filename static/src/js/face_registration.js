@@ -278,7 +278,14 @@ var FaceRegistrationFormView = FormView.extend({
     })
 });
 
-viewRegistry.add('face_registration_form', FaceRegistrationFormView);
+FormView.include({
+    init: function(viewInfo, params) {
+        this._super.apply(this, arguments);
+        if (params.modelName === 'hr.employee.face.wizard') {
+            this.controllerClass = FaceRegistrationFormController;
+        }
+    }
+});
 
 return {
     FaceRegistrationFormController: FaceRegistrationFormController,
