@@ -87,20 +87,30 @@ var FaceKioskMode = AbstractAction.extend({
             this._showProcessingMessage(_t('Loading face detection models...'));
             console.log('Starting to load face detection models...');
             
-            // Load models from static directory
-            await faceapi.nets.tinyFaceDetector.loadFromUri('/hr_attendance_face_recognition/static/models');
-            await faceapi.nets.faceLandmark68Net.loadFromUri('/hr_attendance_face_recognition/static/models');
-            await faceapi.nets.faceRecognitionNet.loadFromUri('/hr_attendance_face_recognition/static/models');
+            // Log the model URLs for debugging
+            const modelUrl = '/hr_attendance_face_recognition/static/models';
+            console.log('Loading models from:', modelUrl);
+            
+            // Load each model with logging
+            console.log('Loading tinyFaceDetector model...');
+            await faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl);
+            console.log('tinyFaceDetector loaded successfully');
+            
+            console.log('Loading faceLandmark68Net model...');
+            await faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl);
+            console.log('faceLandmark68Net loaded successfully');
+            
+            console.log('Loading faceRecognitionNet model...');
+            await faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl);
+            console.log('faceRecognitionNet loaded successfully');
             
             this.faceModelsLoaded = true;
+            console.log('All face models loaded successfully!');
             this._hideProcessingMessage();
             this._showSuccessMessage(_t('Face detection ready!'));
-            
-            // Log successful model loading
-            console.log('Face detection models loaded successfully');
         } catch (error) {
             console.error('Error loading face detection models', error);
-            this._showErrorMessage(_t('Failed to load face detection models. Retrying...'));
+            this._showErrorMessage(_t('Failed to load face detection models: ') + error.message);
             
             // Retry loading models after a delay
             setTimeout(() => {
@@ -115,10 +125,10 @@ var FaceKioskMode = AbstractAction.extend({
         }
         
         try {
-        // Check if mediaDevices is supported
+            // Check if mediaDevices is supported
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            this._showErrorMessage(_t("Your browser doesn't support camera access. Please use Chrome, Firefox, or Edge."));
-            return Promise.reject(new Error("MediaDevices not supported"));
+                this._showErrorMessage(_t("Your browser doesn't support camera access. Please use Chrome, Firefox, or Edge."));
+                return Promise.reject(new Error("MediaDevices not supported"));
             }
             
             this.stream = await navigator.mediaDevices.getUserMedia({
@@ -130,45 +140,19 @@ var FaceKioskMode = AbstractAction.extend({
             });
             
             return Promise.resolve();
-
-            
         } catch (error) {
             console.error('Error accessing camera', error);
-            this._showErrorMessage(_t("Could not access camera. Please ensure you've given permission."));
-                    // Log the model URLs for debugging
-            const modelUrl = '/hr_attendance_face_recognition/static/models';
-            console.log('Loading models from:', modelUrl);
-        
-            // Load each model with logging
-            console.log('Loading tinyFaceDetector model...');
-            await faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl);
-            console.log('tinyFaceDetector loaded successfully');
-        
-            console.log('Loading faceLandmark68Net model...');
-            await faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl);
-            console.log('faceLandmark68Net loaded successfully');
-        
-            console.log('Loading faceRecognitionNet model...');
-            await faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl);
-            console.log('faceRecognitionNet loaded successfully');
-        
-            this.faceModelsLoaded = true;
-            console.log('All face models loaded successfully!');
-            this._hideProcessingMessage();
-            this._showSuccessMessage(_t('Face detection ready!'));
-        } catch (error) {
-            console.error('Error loading face detection models', error);
-            this._showErrorMessage(_t('Failed to load face detection models: ') + error.message);
-        }
-    }
+            let errorMessage = _t("Could not access camera. Please ensure you've given permission.");
+            
             // Show specific error message based on error type
             if (error.name === 'NotAllowedError') {
-                this._showErrorMessage(_t("Camera access denied. Please grant permission in your browser settings."));
+                errorMessage = _t("Camera access denied. Please grant permission in your browser settings.");
             } else if (error.name === 'NotFoundError') {
-                this._showErrorMessage(_t("No camera found. Please connect a camera and try again."));
+                errorMessage = _t("No camera found. Please connect a camera and try again.");
             } else if (error.name === 'NotReadableError') {
-                this._showErrorMessage(_t("Camera is in use by another application. Please close other apps using the camera."));
+                errorMessage = _t("Camera is in use by another application. Please close other apps using the camera.");
             }
+            
             this._showErrorMessage(errorMessage);
             return Promise.reject(error);
         }
