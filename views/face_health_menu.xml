@@ -5,12 +5,24 @@
         <field name="name">Face Recognition Health</field>
         <field name="tag">hr_attendance_face_health_dashboard</field>
     </record>
-    
+
     <!-- Add menu item for health dashboard -->
-    <menuitem id="menu_hr_attendance_face_health" 
-        name="Face Recognition Health" 
-        parent="hr_attendance.menu_hr_attendance_root" 
-        sequence="90" 
-        action="action_face_recognition_health_dashboard"
-        groups="hr_attendance.group_hr_attendance_manager"/>
+    <menuitem id="menu_hr_attendance_face_health"
+              name="Face Recognition Health"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="90"
+              action="action_face_recognition_health_dashboard"
+              groups="hr_attendance.group_hr_attendance_manager"/>
+    
+    <!-- Ensure Proper ARIA Role in Odoo Menu -->
+    <template id="menu_face_recognition" inherit_id="web.menu_secondary">
+        <xpath expr="//ul" position="inside">
+            <ul role="menu" class="o_menu_systray">
+                <li role="menuitem">
+                    <a href="/web#menu_id=menu_hr_attendance_face_health">Face Recognition Health</a>
+                </li>
+            </ul>
+        </xpath>
+    </template>
+
 </odoo>
