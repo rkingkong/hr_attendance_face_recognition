@@ -85,6 +85,7 @@ var FaceKioskMode = AbstractAction.extend({
     _loadFaceDetectionModels: async function() {
         try {
             this._showProcessingMessage(_t('Loading face detection models...'));
+            console.log('Starting to load face detection models...');
             
             // Load models from static directory
             await faceapi.nets.tinyFaceDetector.loadFromUri('/hr_attendance_face_recognition/static/models');
@@ -134,7 +135,32 @@ var FaceKioskMode = AbstractAction.extend({
         } catch (error) {
             console.error('Error accessing camera', error);
             this._showErrorMessage(_t("Could not access camera. Please ensure you've given permission."));
-            
+                    // Log the model URLs for debugging
+            const modelUrl = '/hr_attendance_face_recognition/static/models';
+            console.log('Loading models from:', modelUrl);
+        
+            // Load each model with logging
+            console.log('Loading tinyFaceDetector model...');
+            await faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl);
+            console.log('tinyFaceDetector loaded successfully');
+        
+            console.log('Loading faceLandmark68Net model...');
+            await faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl);
+            console.log('faceLandmark68Net loaded successfully');
+        
+            console.log('Loading faceRecognitionNet model...');
+            await faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl);
+            console.log('faceRecognitionNet loaded successfully');
+        
+            this.faceModelsLoaded = true;
+            console.log('All face models loaded successfully!');
+            this._hideProcessingMessage();
+            this._showSuccessMessage(_t('Face detection ready!'));
+        } catch (error) {
+            console.error('Error loading face detection models', error);
+            this._showErrorMessage(_t('Failed to load face detection models: ') + error.message);
+        }
+    }
             // Show specific error message based on error type
             if (error.name === 'NotAllowedError') {
                 this._showErrorMessage(_t("Camera access denied. Please grant permission in your browser settings."));
