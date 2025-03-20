@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="kiosk_face_mode" name="Face Recognition Kiosk Mode">
-        <t t-call="web.layout">
+        <t t-call="hr_attendance_face_recognition.layout_nocsp">
             <t t-set="title">Face Recognition Kiosk</t>
             <t t-set="head">
                 <meta charset="utf-8"/>
