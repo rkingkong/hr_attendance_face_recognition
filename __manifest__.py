@@ -31,6 +31,7 @@ This module extends the HR Attendance module to add face recognition capabilitie
             'hr_attendance_face_recognition/static/src/css/health_dashboard.css',
             'hr_attendance_face_recognition/static/src/xml/kiosk_face_mode.xml',
             'hr_attendance_face_recognition/static/src/xml/health_dashboard.xml',
+            'hr_attendance_face_recognition/static/src/js/camera_test.js',
         ],
     },
     'external_dependencies': {
