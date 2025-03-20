@@ -3,10 +3,12 @@ odoo.define('hr_attendance_face_recognition.camera_test', function (require) {
 
 // Basic script to test camera access
 $(document).ready(function() {
+    console.log("Camera test script loaded");
+    
     $(document).on('click', '.o_capture_face', function(e) {
         console.log("Capture Face button clicked");
         
-        // Prevent default to avoid any server action attempt
+        // Prevent default action and event propagation
         e.preventDefault();
         e.stopPropagation();
         
