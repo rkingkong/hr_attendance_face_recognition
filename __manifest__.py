@@ -20,6 +20,7 @@ This module extends the HR Attendance module to add face recognition capabilitie
         'views/kiosk_face_view.xml',
         'views/face_health_dashboard.xml',
         'views/face_health_menu.xml',
+        'views/templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
