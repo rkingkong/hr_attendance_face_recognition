@@ -34,6 +34,7 @@
     <record id="view_employee_face_wizard_form" model="ir.ui.view">
         <field name="name">hr.employee.face.wizard.form</field>
         <field name="model">hr.employee.face.wizard</field>
+        <field name="js_class">face_registration_form</field>
         <field name="arch" type="xml">
             <form string="Register Employee Face">
                 <sheet>
