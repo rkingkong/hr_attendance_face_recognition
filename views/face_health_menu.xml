@@ -14,12 +14,4 @@
               action="action_face_recognition_health_dashboard"
               groups="hr_attendance.group_hr_attendance_manager"/>
 
-        <template id="menu_face_recognition" inherit_id="web.webclient_bootstrap" name="Custom Face Recognition Menu">
-            <xpath expr="//header/nav/div[hasclass('o_menu_systray')]" position="inside">
-                <li role="menuitem">
-                    <a href="/web#menu_id=menu_hr_attendance_face_health">Face Recognition Health</a>
-                </li>
-            </xpath>
-        </template>
-
 </odoo>
