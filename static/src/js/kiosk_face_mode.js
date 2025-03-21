@@ -10,7 +10,7 @@ var _t = core._t;
 
 // Load face-api.js from CDN
 const script = document.createElement('script');
-script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.2/dist/face-api.js';
+script.src = '/hr_attendance_face_recognition/static/lib/face-api.js';
 script.crossOrigin = 'anonymous';
 document.head.appendChild(script);
 
